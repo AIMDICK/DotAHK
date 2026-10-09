@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="DotAHK.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:DotAHK.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:DotAHK"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:DotAHK.Models"
+    xmlns:vm="using:DotAHK.ViewModels"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisible" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToCollapsed" Invert="True" />
+    </Page.Resources>
+
+    <Grid>
+        <Grid Padding="24" RowSpacing="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+                <TextBlock Text="{x:Bind ViewModel.Loc.ScriptsHeaderTitle}" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind ViewModel.WatchFolderSummary, Mode=OneWay}" />
+            </StackPanel>
+
+            <StackPanel
+                Grid.Column="1"
+                Orientation="Horizontal"
+                Spacing="16"
+                VerticalAlignment="Center">
+                <ToggleSwitch
+                    IsOn="{x:Bind ViewModel.TrayHijackingEnabled, Mode=TwoWay}"
+                    OffContent="{x:Bind ViewModel.Loc.TrayIconsToggleOff}"
+                    OnContent="{x:Bind ViewModel.Loc.TrayIconsToggleOn}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.TrayIconsToggleTip}" />
+                <Button
+                    Command="{x:Bind ViewModel.DisableAllCommand}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.DisableAllTip}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <SymbolIcon Symbol="Stop" />
+                        <TextBlock Text="{x:Bind ViewModel.Loc.DisableAllText}" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Command="{x:Bind ViewModel.ToggleHiddenPanelCommand}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.HiddenButtonTip}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon FontSize="14" Glyph="&#xED1A;" />
+                        <TextBlock Text="{x:Bind ViewModel.HiddenScriptsSummary, Mode=OneWay}" />
+                    </StackPanel>
+                </Button>
+                <Button Command="{x:Bind ViewModel.RescanCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon FontSize="14" Glyph="&#xE72C;" />
+                        <TextBlock Text="{x:Bind ViewModel.Loc.RescanText}" />
+                    </StackPanel>
+                </Button>
+                <ComboBox
+                    x:Name="LanguageCombo"
+                    MinWidth="120"
+                    VerticalAlignment="Center"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.LanguageComboTip}"
+                    SelectionChanged="OnLanguageSelectionChanged">
+                    <!-- Friendly, native language names; the real culture code lives in Tag. -->
+                    <ComboBoxItem Content="English" Tag="en-US" />
+                    <ComboBoxItem Content="Español" Tag="es-ES" />
+                    <ComboBoxItem Content="Русский" Tag="ru-RU" />
+                    <ComboBoxItem Content="Deutsch" Tag="de-DE" />
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
+        <!-- Toolbar: environment profiles and daemon start-up -->
+        <Grid Grid.Row="1" ColumnSpacing="16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Environment profiles -->
+            <StackPanel
+                Grid.Column="0"
+                Orientation="Horizontal"
+                Spacing="6"
+                VerticalAlignment="Center">
+                <FontIcon
+                    FontSize="14"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Glyph="&#xE77B;" />
+                <ComboBox
+                    MinWidth="180"
+                    ItemsSource="{x:Bind ViewModel.ProfileOptions}"
+                    SelectedItem="{x:Bind ViewModel.ActiveProfileOption, Mode=TwoWay}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.ProfileComboTip}" />
+                <Button
+                    Command="{x:Bind ViewModel.ActivateProfileCommand}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.ActivateTip}">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon FontSize="14" Glyph="&#xE768;" />
+                        <TextBlock Text="{x:Bind ViewModel.Loc.ActivateText}" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Command="{x:Bind ViewModel.AddProfileCommand}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.AddProfileTip}">
+                    <FontIcon FontSize="14" Glyph="&#xE710;" />
+                </Button>
+                <Button
+                    Command="{x:Bind ViewModel.RemoveProfileCommand}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.RemoveProfileTip}">
+                    <FontIcon FontSize="14" Glyph="&#xE74D;" />
+                </Button>
+                <Button
+                    Command="{x:Bind ViewModel.OpenProfileEditorCommand}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.EditProfileTip}">
+                    <FontIcon FontSize="14" Glyph="&#xE70F;" />
+                </Button>
+            </StackPanel>
+
+            <!-- Daemon controls -->
+            <StackPanel
+                Grid.Column="1"
+                Orientation="Horizontal"
+                Spacing="16"
+                VerticalAlignment="Center">
+                <ToggleSwitch
+                    IsOn="{x:Bind ViewModel.LaunchOnStartup, Mode=TwoWay}"
+                    OffContent="{x:Bind ViewModel.Loc.StartupToggleOff}"
+                    OnContent="{x:Bind ViewModel.Loc.StartupToggleOn}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.StartupToggleTip}" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Version warnings are shown unobtrusively in the bottom status bar. -->
+
+        <ProgressRing
+            Grid.Row="3"
+            Width="44"
+            Height="44"
+            HorizontalAlignment="Center"
+            IsActive="{x:Bind ViewModel.IsInitializing, Mode=OneWay}"
+            Visibility="{x:Bind ViewModel.IsInitializing, Mode=OneWay, Converter={StaticResource BoolToVisible}}" />
+
+        <!-- Script list -->
+        <ListView
+            Grid.Row="4"
+            ItemsSource="{x:Bind ViewModel.FilteredScripts}"
+            SelectionMode="None"
+            Visibility="{x:Bind ViewModel.HasScripts, Mode=OneWay, Converter={StaticResource BoolToVisible}}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="Margin" Value="0,0,0,6" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="vm:ScriptItemViewModel">
+                    <Border
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="12,8">
+                        <Grid ColumnSpacing="8" RowSpacing="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Name, path, live status -->
+                            <StackPanel Grid.Row="0" Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock
+                                        Style="{StaticResource BodyStrongTextBlockStyle}"
+                                        Text="{x:Bind Name}"
+                                        TextTrimming="CharacterEllipsis" />
+                                    <Border
+                                        Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                        CornerRadius="4"
+                                        Padding="6,0"
+                                        VerticalAlignment="Center">
+                                        <TextBlock
+                                            Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{x:Bind VersionLabel}" />
+                                    </Border>
+                                </StackPanel>
+                                <HyperlinkButton
+                                    Padding="0"
+                                    Command="{x:Bind OpenLocationCommand}"
+                                    ToolTipService.ToolTip="{x:Bind Loc.OpenLocationTip}">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon
+                                            FontSize="12"
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            Glyph="&#xE8B7;" />
+                                        <TextBlock
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{x:Bind FilePath}"
+                                            TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                </HyperlinkButton>
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        Style="{StaticResource CaptionTextBlockStyle}"
+                                        Text="{x:Bind StatusText, Mode=OneWay}" />
+                                    <TextBlock
+                                        Foreground="{ThemeResource SystemFillColorSuccessBrush}"
+                                        Style="{StaticResource CaptionTextBlockStyle}"
+                                        Text="{x:Bind CountdownText, Mode=OneWay}" />
+                                </StackPanel>
+                                <!-- Live telemetry (CPU / memory) with runaway-loop alert -->
+                                <StackPanel
+                                    Orientation="Horizontal"
+                                    Spacing="10"
+                                    Visibility="{x:Bind IsActive, Mode=OneWay, Converter={StaticResource BoolToVisible}}">
+                                    <TextBlock
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        Style="{StaticResource CaptionTextBlockStyle}"
+                                        Text="{x:Bind CpuText, Mode=OneWay}" />
+                                    <TextBlock
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        Style="{StaticResource CaptionTextBlockStyle}"
+                                        Text="{x:Bind MemoryText, Mode=OneWay}" />
+                                    <StackPanel
+                                        Orientation="Horizontal"
+                                        Spacing="4"
+                                        Visibility="{x:Bind IsHighCpu, Mode=OneWay, Converter={StaticResource BoolToVisible}}">
+                                        <FontIcon
+                                            FontSize="12"
+                                            Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                            Glyph="&#xE7BA;" />
+                                        <TextBlock
+                                            FontWeight="SemiBold"
+                                            Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{x:Bind Loc.HighCpuText}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Execution controls (grouped, tight) -->
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="6">
+                                <Button
+                                    Command="{x:Bind BurstCommand}"
+                                    ToolTipService.ToolTip="{x:Bind Loc.BurstTip}">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <FontIcon FontSize="14" Glyph="&#xE945;" />
+                                        <TextBlock Text="{x:Bind Loc.BurstText}" />
+                                    </StackPanel>
+                                </Button>
+                                <Button
+                                    Command="{x:Bind EditCommand}"
+                                    ToolTipService.ToolTip="{x:Bind Loc.EditTip}">
+                                    <FontIcon FontSize="14" Glyph="&#xE70F;" />
+                                </Button>
+                                <Button
+                                    Command="{x:Bind ReloadCommand}"
+                                    ToolTipService.ToolTip="{x:Bind Loc.ReloadTip}">
+                                    <FontIcon FontSize="14" Glyph="&#xE72C;" />
+                                </Button>
+                                <Button
+                                    Command="{x:Bind HideCommand}"
+                                    ToolTipService.ToolTip="{x:Bind Loc.HideTip}">
+                                    <FontIcon FontSize="14" Glyph="&#xED1A;" />
+                                </Button>
+                                <ToggleSwitch
+                                    MinWidth="80"
+                                    VerticalAlignment="Center"
+                                    IsOn="{x:Bind IsActive, Mode=TwoWay}"
+                                    OffContent="{x:Bind Loc.ActiveToggleOff}"
+                                    OnContent="{x:Bind Loc.ActiveToggleOn}"
+                                    ToolTipService.ToolTip="{x:Bind Loc.ActiveToggleTip}" />
+                            </StackPanel>
+
+                            <!-- Advanced settings (collapsed by default to keep the card slim) -->
+                            <Expander
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                Header="{x:Bind Loc.AdvancedHeader}">
+                                <StackPanel Spacing="8">
+                                    <!-- Schedule: run for a user-defined duration -->
+                                    <StackPanel
+                                        Orientation="Horizontal"
+                                        Spacing="8"
+                                        VerticalAlignment="Center">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{x:Bind Loc.RunForText}" />
+                                        <NumberBox
+                                            Width="110"
+                                            Minimum="1"
+                                            SpinButtonPlacementMode="Compact"
+                                            Value="{x:Bind ScheduleAmount, Mode=TwoWay}" />
+                                        <ComboBox
+                                            Width="120"
+                                            SelectedIndex="{x:Bind ScheduleUnitIndex, Mode=TwoWay}">
+                                            <ComboBoxItem Content="{x:Bind Loc.SecondsItem}" />
+                                            <ComboBoxItem Content="{x:Bind Loc.MinutesItem}" />
+                                            <ComboBoxItem Content="{x:Bind Loc.HoursItem}" />
+                                        </ComboBox>
+                                        <Button
+                                            Command="{x:Bind ScheduleCommand}"
+                                            Content="{x:Bind Loc.ScheduleButton}"
+                                            ToolTipService.ToolTip="{x:Bind Loc.ScheduleTip}" />
+                                    </StackPanel>
+
+                                    <!-- Dynamic arguments (passed on the command line) -->
+                                    <StackPanel
+                                        Orientation="Horizontal"
+                                        Spacing="8"
+                                        VerticalAlignment="Center">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{x:Bind Loc.ArgumentsLabel}" />
+                                        <TextBox
+                                            MinWidth="320"
+                                            PlaceholderText="{x:Bind Loc.ArgumentsPlaceholder}"
+                                            Text="{x:Bind Arguments, Mode=TwoWay}"
+                                            ToolTipService.ToolTip="{x:Bind Loc.ArgumentsTip}" />
+                                    </StackPanel>
+
+                                    <!-- Global hotkey (toggles this script from anywhere) -->
+                                    <StackPanel
+                                        Orientation="Horizontal"
+                                        Spacing="8"
+                                        VerticalAlignment="Center">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{x:Bind Loc.HotkeyLabel}" />
+                                        <TextBox
+                                            MinWidth="180"
+                                            PlaceholderText="{x:Bind Loc.HotkeyPlaceholder}"
+                                            Text="{x:Bind HotkeyText, Mode=TwoWay}"
+                                            ToolTipService.ToolTip="{x:Bind Loc.HotkeyTip}" />
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{x:Bind HotkeyStatus, Mode=OneWay}" />
+                                    </StackPanel>
+
+                                    <!-- Hotkeys discovered inside the script source -->
+                                    <StackPanel
+                                        Orientation="Horizontal"
+                                        Spacing="6"
+                                        VerticalAlignment="Center"
+                                        Visibility="{x:Bind HasDetectedHotkeys, Mode=OneWay, Converter={StaticResource BoolToVisible}}">
+                                        <TextBlock
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{x:Bind Loc.InScriptText}" />
+                                        <ItemsRepeater ItemsSource="{x:Bind DetectedHotkeys}">
+                                            <ItemsRepeater.Layout>
+                                                <StackLayout Orientation="Horizontal" Spacing="6" />
+                                            </ItemsRepeater.Layout>
+                                            <ItemsRepeater.ItemTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <Border
+                                                        Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                                                        CornerRadius="4"
+                                                        Padding="6,1">
+                                                        <TextBlock Style="{StaticResource CaptionTextBlockStyle}" Text="{x:Bind}" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsRepeater.ItemTemplate>
+                                        </ItemsRepeater>
+                                    </StackPanel>
+
+                                    <!-- Groups (many-to-many) + daemon launch -->
+                                    <StackPanel Spacing="6">
+                                        <TextBlock
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{x:Bind Loc.GroupsLabel}" />
+                                        <ItemsRepeater ItemsSource="{x:Bind Groups}">
+                                            <ItemsRepeater.Layout>
+                                                <StackLayout Orientation="Horizontal" Spacing="12" />
+                                            </ItemsRepeater.Layout>
+                                            <ItemsRepeater.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:ScriptGroupToggleViewModel">
+                                                    <CheckBox
+                                                        Content="{x:Bind ProfileName}"
+                                                        IsChecked="{x:Bind IsMember, Mode=TwoWay}" />
+                                                </DataTemplate>
+                                            </ItemsRepeater.ItemTemplate>
+                                        </ItemsRepeater>
+                                        <CheckBox
+                                            Content="{x:Bind Loc.LaunchOnStartup}"
+                                            IsChecked="{x:Bind LaunchOnStartup, Mode=TwoWay}"
+                                            ToolTipService.ToolTip="{x:Bind Loc.LaunchOnStartupTip}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </Expander>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!-- Empty state -->
+        <StackPanel
+            Grid.Row="4"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Spacing="6"
+            Visibility="{x:Bind ViewModel.ShowEmptyState, Mode=OneWay, Converter={StaticResource BoolToVisible}}">
+            <FontIcon
+                FontSize="28"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Glyph="&#xE7C3;" />
+            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{x:Bind ViewModel.EmptyStateTitle, Mode=OneWay}" />
+            <TextBlock
+                HorizontalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind ViewModel.EmptyStateHint, Mode=OneWay}" />
+        </StackPanel>
+
+        <!-- Status bar -->
+        <Grid Grid.Row="5" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
+                TextTrimming="CharacterEllipsis" />
+
+            <StackPanel
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                Spacing="6">
+                <FontIcon
+                    FontSize="12"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Glyph="&#xE946;" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{x:Bind ViewModel.InstallationStatusText, Mode=OneWay}" />
+                <!-- Actionable installer links, shown only while a version is missing. -->
+                <HyperlinkButton
+                    Padding="6,0"
+                    Command="{x:Bind ViewModel.DownloadAhkV1Command}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.DownloadV1Tip}"
+                    Visibility="{x:Bind ViewModel.IsV1Installed, Mode=OneWay, Converter={StaticResource BoolToCollapsed}}">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <SymbolIcon Symbol="Download" />
+                        <TextBlock Text="{x:Bind ViewModel.Loc.DownloadV1Text}" FontWeight="SemiBold" />
+                    </StackPanel>
+                </HyperlinkButton>
+                <HyperlinkButton
+                    Padding="6,0"
+                    Command="{x:Bind ViewModel.DownloadAhkV2Command}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.DownloadV2Tip}"
+                    Visibility="{x:Bind ViewModel.IsV2Installed, Mode=OneWay, Converter={StaticResource BoolToCollapsed}}">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <SymbolIcon Symbol="Download" />
+                        <TextBlock Text="{x:Bind ViewModel.Loc.DownloadV2Text}" FontWeight="SemiBold" />
+                    </StackPanel>
+                </HyperlinkButton>
+            </StackPanel>
+        </Grid>
+        </Grid>
+
+        <!-- Quick-fix editor overlay -->
+        <Grid
+            Padding="24"
+            Background="#99000000"
+            Visibility="{x:Bind ViewModel.Editor.IsOpen, Mode=OneWay, Converter={StaticResource BoolToVisible}}">
+            <Border
+                MaxWidth="960"
+                MaxHeight="640"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="12"
+                Padding="20">
+                <Grid RowSpacing="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Spacing="2">
+                            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{x:Bind ViewModel.Loc.QuickFixEditorTitle}" />
+                            <TextBlock
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Style="{StaticResource CaptionTextBlockStyle}"
+                                Text="{x:Bind ViewModel.Editor.FilePath, Mode=OneWay}"
+                                TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{x:Bind ViewModel.Editor.StatusMessage, Mode=OneWay}" />
+                    </Grid>
+
+                    <TextBox
+                        Grid.Row="1"
+                        MinHeight="360"
+                        AcceptsReturn="True"
+                        FontFamily="Cascadia Code, Consolas, monospace"
+                        IsSpellCheckEnabled="False"
+                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        Text="{x:Bind ViewModel.Editor.Text, Mode=TwoWay}"
+                        TextWrapping="NoWrap" />
+
+                    <StackPanel
+                        Grid.Row="2"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal"
+                        Spacing="8">
+                        <Button Command="{x:Bind ViewModel.CloseEditorCommand}" Content="{x:Bind ViewModel.Loc.EditorCloseButton}" />
+                        <Button
+                            Command="{x:Bind ViewModel.SaveEditorCommand}"
+                            Content="{x:Bind ViewModel.Loc.EditorSaveButton}"
+                            IsEnabled="{x:Bind ViewModel.Editor.IsDirty, Mode=OneWay}" />
+                        <Button
+                            Command="{x:Bind ViewModel.SaveAndReloadEditorCommand}"
+                            Content="{x:Bind ViewModel.Loc.EditorSaveReloadButton}"
+                            Style="{StaticResource AccentButtonStyle}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Profile editor overlay: assign scripts to the selected profile -->
+        <Grid
+            Padding="24"
+            Background="#99000000"
+            Visibility="{x:Bind ViewModel.ProfileEditor.IsOpen, Mode=OneWay, Converter={StaticResource BoolToVisible}}">
+            <Border
+                MaxWidth="720"
+                MaxHeight="640"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="12"
+                Padding="20">
+                <Grid RowSpacing="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Spacing="2">
+                            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{x:Bind ViewModel.Loc.AssignProfileTitle}" />
+                            <TextBlock
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Style="{StaticResource CaptionTextBlockStyle}"
+                                Text="{x:Bind ViewModel.ProfileEditor.ProfileName, Mode=OneWay}" />
+                        </StackPanel>
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{x:Bind ViewModel.ProfileEditor.StatusMessage, Mode=OneWay}" />
+                    </Grid>
+
+                    <ListView
+                        Grid.Row="1"
+                        MinHeight="320"
+                        ItemsSource="{x:Bind ViewModel.ProfileEditor.Scripts}"
+                        SelectionMode="None">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ProfileScriptSelectionViewModel">
+                                <StackPanel Spacing="2">
+                                    <CheckBox
+                                        HorizontalAlignment="Stretch"
+                                        Content="{x:Bind FileName}"
+                                        IsChecked="{x:Bind IsSelected, Mode=TwoWay}" />
+                                    <TextBlock
+                                        Margin="28,0,0,0"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        Style="{StaticResource CaptionTextBlockStyle}"
+                                        Text="{x:Bind FilePath}"
+                                        TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <StackPanel
+                        Grid.Row="2"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal"
+                        Spacing="8">
+                        <Button Command="{x:Bind ViewModel.ProfileEditor.CloseCommand}" Content="{x:Bind ViewModel.Loc.ProfileEditorCloseButton}" />
+                        <Button
+                            Command="{x:Bind ViewModel.ProfileEditor.SaveCommand}"
+                            Content="{x:Bind ViewModel.Loc.ProfileEditorSaveButton}"
+                            Style="{StaticResource AccentButtonStyle}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Hidden scripts overlay (soft-deleted scripts, restorable) -->
+        <Grid
+            Padding="24"
+            Background="#99000000"
+            Visibility="{x:Bind ViewModel.IsHiddenPanelOpen, Mode=OneWay, Converter={StaticResource BoolToVisible}}">
+            <Border
+                MaxWidth="720"
+                MaxHeight="640"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="12"
+                Padding="20">
+                <Grid RowSpacing="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Spacing="2">
+                        <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="{x:Bind ViewModel.Loc.HiddenScriptsTitle}" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Style="{StaticResource CaptionTextBlockStyle}"
+                            Text="{x:Bind ViewModel.Loc.HiddenScriptsHint}" />
+                    </StackPanel>
+
+                    <ListView
+                        Grid.Row="1"
+                        MinHeight="320"
+                        ItemsSource="{x:Bind ViewModel.HiddenScripts}"
+                        SelectionMode="None">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ScriptItemViewModel">
+                                <Grid ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Spacing="2">
+                                        <TextBlock
+                                            Style="{StaticResource BodyStrongTextBlockStyle}"
+                                            Text="{x:Bind Name}"
+                                            TextTrimming="CharacterEllipsis" />
+                                        <TextBlock
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{x:Bind FilePath}"
+                                            TextTrimming="CharacterEllipsis" />
+                                    </StackPanel>
+                                    <Button
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Command="{x:Bind RestoreCommand}"
+                                        ToolTipService.ToolTip="{x:Bind Loc.RestoreTip}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <FontIcon FontSize="14" Glyph="&#xE777;" />
+                                            <TextBlock Text="{x:Bind Loc.RestoreText}" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <StackPanel
+                        Grid.Row="2"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal"
+                        Spacing="8">
+                        <Button
+                            Command="{x:Bind ViewModel.RestoreAllHiddenCommand}"
+                            Content="{x:Bind ViewModel.Loc.RestoreAllButton}" />
+                        <Button
+                            Command="{x:Bind ViewModel.CloseHiddenPanelCommand}"
+                            Content="{x:Bind ViewModel.Loc.HiddenCloseButton}"
+                            Style="{StaticResource AccentButtonStyle}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

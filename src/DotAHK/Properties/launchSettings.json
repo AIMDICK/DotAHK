@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DotAHK (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "DotAHK (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

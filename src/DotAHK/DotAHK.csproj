@@ -1,0 +1,139 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>DotAHK</RootNamespace>
+    <!-- Required so MakePri can resolve the default language for the .resw resources. -->
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>DotAHK.ico</ApplicationIcon>
+    <Platforms>x86;x64;ARM64</Platforms>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</RuntimeIdentifier>
+    <PublishProfile Condition="Exists('Properties\PublishProfiles\win-$(Platform).pubxml')">win-$(Platform).pubxml</PublishProfile>
+    <UseWinUI>true</UseWinUI>
+    <WinUISDKReferences>false</WinUISDKReferences>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!--
+      Run as a plain, unpackaged Win32 desktop app. This avoids the need for
+      MSIX packaging, a signing certificate, or Windows Developer Mode, and lets
+      the app be launched with a simple "dotnet run" / direct .exe execution.
+    -->
+    <WindowsPackageType>None</WindowsPackageType>
+    <!--
+      Framework-dependent deployment: use the Windows App Runtime installed on the
+      machine instead of copying the entire runtime next to the executable.
+      Self-contained forced the OS loader to map hundreds of WinAppSDK DLLs from disk
+      on every cold start, which dominated first-launch time (multiple seconds). The
+      unpackaged bootstrapper (auto-initialized by the SDK) loads the runtime instead.
+    -->
+    <WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>
+    <EnableMsixTooling>false</EnableMsixTooling>
+    <EnableWinAppRunSupport>false</EnableWinAppRunSupport>
+  </PropertyGroup>
+
+  <!--
+    Copy the icon/logo assets next to the executable for BOTH build and publish so the
+    portable release folder keeps its Assets (used by the tray icon and window icon).
+  -->
+  <ItemGroup>
+    <Content Include="Assets\SplashScreen.scale-200.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Assets\LockScreenLogo.scale-200.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Assets\Square44x44Logo.targetsize-48_altform-lightunplated.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Assets\StoreLogo.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Assets\AppIcon.ico" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Assets\AppIcon.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Assets\app.ico" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <!-- Master application icon. Copied next to the executable so the runtime can load it via AppWindow.SetIcon("DotAHK.ico"). -->
+    <Content Include="DotAHK.ico" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <!--
+    Localization catalogs. The .resw files are parsed directly at run time by
+    LocalizationService (the framework resource index is not reliably consumable from
+    code in an unpackaged app), so they must sit next to the executable, preserving the
+    Strings/<lang>/ folder structure, in both the build output and the publish folder.
+  -->
+  <ItemGroup>
+    <Content Include="Strings\**\Resources.resw" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!--
+    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+    Tools extension to be activated for this project even if the Windows App SDK Nuget
+    package has not yet been restored.
+  -->
+  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <ProjectCapability Include="Msix"/>
+  </ItemGroup>
+
+  <!--
+    Microsoft.Windows.SDK.BuildTools.WinApp adds first-class support for
+    `dotnet run` on packaged WinUI apps: it hooks the .NET CLI Run target to
+    register a debug identity via the winapp CLI and launch the app with
+    package identity (AUMID).
+    Set <EnableWinAppRunSupport>false</EnableWinAppRunSupport> in a
+    <PropertyGroup> above to opt out.
+  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="*" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="*" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="*" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools.WinApp" Version="*" />
+  </ItemGroup>
+
+  <!--
+    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
+    Explorer "Package and Publish" context menu entry to be enabled for this project even if
+    the Windows App SDK Nuget package has not yet been restored.
+  -->
+  <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+  </PropertyGroup>
+
+  <!--
+    Publish properties tuned for an unpackaged, portable GitHub release.
+
+    * Framework-dependent and single-file OFF keeps the output as a simple folder that
+      can be zipped and shipped as-is; it relies on the Windows App Runtime being
+      installed on the target machine (the unpackaged bootstrapper loads it at startup).
+    * Trimming is disabled: WinUI 3 XAML/reflection is not trimming-safe and trimming
+      has caused runtime failures on unpackaged deployments.
+    * Debug symbols are dropped from non-Debug builds for a cleaner release payload.
+  -->
+  <PropertyGroup>
+    <SelfContained>False</SelfContained>
+    <PublishSingleFile>False</PublishSingleFile>
+    <PublishTrimmed>False</PublishTrimmed>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
+    <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
+    <DebugType Condition="'$(Configuration)' != 'Debug'">none</DebugType>
+  </PropertyGroup>
+
+  <!--
+    The Windows App SDK emits $(TargetName).pri (compiled XAML + app resources) into the
+    build output, but the default publish pipeline for unpackaged apps does NOT copy it
+    into the publish folder. Without it the published executable throws during
+    InitializeComponent and the app never appears. Copy it explicitly so the portable
+    release folder actually runs.
+  -->
+  <Target Name="CopyPriToPublish" AfterTargets="Publish" Condition="'$(PublishDir)' != ''">
+    <Copy
+      SourceFiles="$(OutDir)$(TargetName).pri"
+      DestinationFolder="$(PublishDir)"
+      SkipUnchangedFiles="true"
+      Condition="Exists('$(OutDir)$(TargetName).pri')" />
+  </Target>
+</Project>

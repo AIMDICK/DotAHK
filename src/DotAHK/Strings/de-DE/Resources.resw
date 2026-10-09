@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <data name="ScriptsHeaderTitle" xml:space="preserve"><value>Skripte</value></data>
+  <data name="WatchFolderSummaryOne" xml:space="preserve"><value>1 überwachter Ordner</value></data>
+  <data name="WatchFolderSummaryMany" xml:space="preserve"><value>{0} überwachte Ordner</value></data>
+  <data name="TrayIconsToggle.OffContent" xml:space="preserve"><value>Taskleistensymbole: ein</value></data>
+  <data name="TrayIconsToggle.OnContent" xml:space="preserve"><value>Taskleistensymbole: ausgeblendet</value></data>
+  <data name="TrayIconsToggle.ToolTipService.ToolTip" xml:space="preserve"><value>#NoTrayIcon einfügen, damit Skripte keine eigenen Taskleistensymbole hinzufügen</value></data>
+  <data name="DisableAllText.Text" xml:space="preserve"><value>Alle deaktivieren</value></data>
+  <data name="DisableAllButton.ToolTipService.ToolTip" xml:space="preserve"><value>Alle laufenden AutoHotkey-Skripte beenden</value></data>
+  <data name="HiddenButton.ToolTipService.ToolTip" xml:space="preserve"><value>Ausgeblendete (vorläufig gelöschte) Skripte ein-/ausblenden</value></data>
+  <data name="RescanText.Text" xml:space="preserve"><value>Neu scannen</value></data>
+  <data name="LanguageCombo.ToolTipService.ToolTip" xml:space="preserve"><value>Sprache der Anwendung ändern</value></data>
+  <data name="ProfileCombo.ToolTipService.ToolTip" xml:space="preserve"><value>Ein Umgebungsprofil auswählen</value></data>
+  <data name="ActivateText.Text" xml:space="preserve"><value>Aktivieren</value></data>
+  <data name="ActivateButton.ToolTipService.ToolTip" xml:space="preserve"><value>Die Skripte dieses Profils starten und die anderen beenden</value></data>
+  <data name="AddProfileButton.ToolTipService.ToolTip" xml:space="preserve"><value>Neues Profil erstellen</value></data>
+  <data name="RemoveProfileButton.ToolTipService.ToolTip" xml:space="preserve"><value>Ausgewähltes Profil löschen</value></data>
+  <data name="EditProfileButton.ToolTipService.ToolTip" xml:space="preserve"><value>Skripte dem ausgewählten Profil zuweisen</value></data>
+  <data name="StartupToggle.OffContent" xml:space="preserve"><value>Start: aus</value></data>
+  <data name="StartupToggle.OnContent" xml:space="preserve"><value>Start: ein</value></data>
+  <data name="StartupToggle.ToolTipService.ToolTip" xml:space="preserve"><value>DotAHK bei der Windows-Anmeldung automatisch starten</value></data>
+  <data name="OpenLocationButton.ToolTipService.ToolTip" xml:space="preserve"><value>Im Datei-Explorer öffnen</value></data>
+  <data name="HighCpuText.Text" xml:space="preserve"><value>Hohe CPU-Auslastung - mögliche Endlosschleife</value></data>
+  <data name="BurstText.Text" xml:space="preserve"><value>Kurzlauf</value></data>
+  <data name="BurstButton.ToolTipService.ToolTip" xml:space="preserve"><value>10 Sekunden ausführen, dann automatisch beenden</value></data>
+  <data name="EditButton.ToolTipService.ToolTip" xml:space="preserve"><value>Schnellkorrektur-Editor öffnen</value></data>
+  <data name="ReloadButton.ToolTipService.ToolTip" xml:space="preserve"><value>Neu starten, um den neuesten Code von der Festplatte zu laden</value></data>
+  <data name="HideButton.ToolTipService.ToolTip" xml:space="preserve"><value>Dieses Skript ausblenden (Datei wird nicht gelöscht)</value></data>
+  <data name="ActiveToggle.OffContent" xml:space="preserve"><value>Aus</value></data>
+  <data name="ActiveToggle.OnContent" xml:space="preserve"><value>Ein</value></data>
+  <data name="ActiveToggle.ToolTipService.ToolTip" xml:space="preserve"><value>Ausführen, bis Sie es deaktivieren</value></data>
+  <data name="AdvancedExpander.Header" xml:space="preserve"><value>Erweiterte Einstellungen</value></data>
+  <data name="RunForText.Text" xml:space="preserve"><value>Ausführen für</value></data>
+  <data name="SecondsItem.Content" xml:space="preserve"><value>Sekunden</value></data>
+  <data name="MinutesItem.Content" xml:space="preserve"><value>Minuten</value></data>
+  <data name="HoursItem.Content" xml:space="preserve"><value>Stunden</value></data>
+  <data name="ScheduleButton.Content" xml:space="preserve"><value>Planen</value></data>
+  <data name="ScheduleButton.ToolTipService.ToolTip" xml:space="preserve"><value>Für die gewählte Dauer ausführen, dann automatisch beenden</value></data>
+  <data name="ArgumentsLabel.Text" xml:space="preserve"><value>Argumente</value></data>
+  <data name="ArgumentsBox.PlaceholderText" xml:space="preserve"><value>Optional: z. B. -delay 50</value></data>
+  <data name="ArgumentsBox.ToolTipService.ToolTip" xml:space="preserve"><value>Zusätzliche Befehlszeilenargumente für das Skript</value></data>
+  <data name="HotkeyLabel.Text" xml:space="preserve"><value>Tastenkürzel</value></data>
+  <data name="HotkeyBox.PlaceholderText" xml:space="preserve"><value>z. B. Strg+Alt+G</value></data>
+  <data name="HotkeyBox.ToolTipService.ToolTip" xml:space="preserve"><value>Systemweites Tastenkürzel, das dieses Skript ein- und ausschaltet</value></data>
+  <data name="InScriptText.Text" xml:space="preserve"><value>Im Skript:</value></data>
+  <data name="GroupsLabel.Text" xml:space="preserve"><value>Gruppen</value></data>
+  <data name="GroupToggle.ToolTipService.ToolTip" xml:space="preserve"><value>Zugehörigkeit zu dieser Gruppe umschalten. Ein Skript kann zu mehreren Gruppen gehören.</value></data>
+  <data name="LaunchOnStartupCheck.Content" xml:space="preserve"><value>Beim Start ausführen</value></data>
+  <data name="LaunchOnStartupCheck.ToolTipService.ToolTip" xml:space="preserve"><value>Dieses Skript beim Start von DotAHK automatisch ausführen</value></data>
+  <data name="DownloadV1Text.Text" xml:space="preserve"><value>v1 herunterladen</value></data>
+  <data name="DownloadV1Button.ToolTipService.ToolTip" xml:space="preserve"><value>AutoHotkey v1 ist nicht installiert</value></data>
+  <data name="DownloadV2Text.Text" xml:space="preserve"><value>v2 herunterladen</value></data>
+  <data name="DownloadV2Button.ToolTipService.ToolTip" xml:space="preserve"><value>AutoHotkey v2 ist nicht installiert</value></data>
+  <data name="QuickFixEditorTitle.Text" xml:space="preserve"><value>Schnellkorrektur-Editor</value></data>
+  <data name="EditorCloseButton.Content" xml:space="preserve"><value>Schließen</value></data>
+  <data name="EditorSaveButton.Content" xml:space="preserve"><value>Speichern</value></data>
+  <data name="EditorSaveReloadButton.Content" xml:space="preserve"><value>Speichern und neu laden</value></data>
+  <data name="AssignProfileTitle.Text" xml:space="preserve"><value>Skripte dem Profil zuweisen</value></data>
+  <data name="ProfileEditorCloseButton.Content" xml:space="preserve"><value>Schließen</value></data>
+  <data name="ProfileEditorSaveButton.Content" xml:space="preserve"><value>Speichern</value></data>
+  <data name="HiddenScriptsTitle.Text" xml:space="preserve"><value>Ausgeblendete Skripte</value></data>
+  <data name="HiddenScriptsHint.Text" xml:space="preserve"><value>Ausgeblendete Skripte bleiben auf der Festplatte. Stellen Sie eines wieder her, um es in die aktive Liste aufzunehmen.</value></data>
+  <data name="RestoreText.Text" xml:space="preserve"><value>Wiederherstellen</value></data>
+  <data name="RestoreButton.ToolTipService.ToolTip" xml:space="preserve"><value>Dieses Skript in die aktive Liste wiederherstellen</value></data>
+  <data name="RestoreAllButton.Content" xml:space="preserve"><value>Alle wiederherstellen</value></data>
+  <data name="HiddenCloseButton.Content" xml:space="preserve"><value>Schließen</value></data>
+  <data name="WelcomeTitle.Text" xml:space="preserve"><value>Willkommen bei DotAHK</value></data>
+  <data name="WelcomeBody.Text" xml:space="preserve"><value>Wählen Sie die Ordner aus, die nach AutoHotkey-Skripten (.ahk, .ahk1, .ahk2) durchsucht werden. Nur ausgewählte Ordner werden durchsucht.</value></data>
+  <data name="AddFolderText.Text" xml:space="preserve"><value>Ordner hinzufügen</value></data>
+  <data name="GetStartedButton.Content" xml:space="preserve"><value>Erste Schritte</value></data>
+  <data name="LoadingText.Text" xml:space="preserve"><value>DotAHK wird gestartet...</value></data>
+  <data name="LanguageRestartTitle" xml:space="preserve"><value>Sprache geändert</value></data>
+  <data name="LanguageRestartMessage" xml:space="preserve"><value>Bitte starten Sie die Anwendung neu, um die Sprachänderungen anzuwenden.</value></data>
+  <data name="ConfirmOkButton" xml:space="preserve"><value>OK</value></data>
+
+  <data name="AllScriptsOption" xml:space="preserve"><value>Alle Skripte</value></data>
+  <data name="StatusReady" xml:space="preserve"><value>Bereit</value></data>
+  <data name="StatusScanning" xml:space="preserve"><value>AutoHotkey-Skripte werden gesucht...</value></data>
+  <data name="StatusFoundOne" xml:space="preserve"><value>1 Skript gefunden.</value></data>
+  <data name="StatusFoundMany" xml:space="preserve"><value>{0} Skripte gefunden.</value></data>
+  <data name="StatusScanFailed" xml:space="preserve"><value>Scan fehlgeschlagen: {0}</value></data>
+  <data name="StatusFolderWatched" xml:space="preserve"><value>Der Ordner wird bereits überwacht.</value></data>
+  <data name="StatusAddedProfile" xml:space="preserve"><value>Profil "{0}" hinzugefügt.</value></data>
+  <data name="StatusProfileExists" xml:space="preserve"><value>Profil "{0}" existiert bereits.</value></data>
+  <data name="StatusDeletedProfile" xml:space="preserve"><value>Profil "{0}" gelöscht.</value></data>
+  <data name="StatusSelectProfileActivate" xml:space="preserve"><value>Wählen Sie ein Profil aus, bevor Sie es aktivieren.</value></data>
+  <data name="StatusSelectProfileEdit" xml:space="preserve"><value>Wählen Sie ein Profil zum Bearbeiten aus, bevor Sie Skripte zuweisen.</value></data>
+  <data name="StatusProfileActive" xml:space="preserve"><value>Profil "{0}" aktiv - {1} Skript(e) gestartet.</value></data>
+  <data name="StatusNoRunningScripts" xml:space="preserve"><value>Keine laufenden Skripte zum Beenden.</value></data>
+  <data name="StatusStoppedOne" xml:space="preserve"><value>1 Skript beendet.</value></data>
+  <data name="StatusStoppedMany" xml:space="preserve"><value>{0} Skripte beendet.</value></data>
+  <data name="StatusHiddenScript" xml:space="preserve"><value>"{0}" ausgeblendet. Öffnen Sie "Ausgeblendet", um es wiederherzustellen.</value></data>
+  <data name="StatusRestoredScript" xml:space="preserve"><value>"{0}" wiederhergestellt.</value></data>
+  <data name="StatusRestoredAll" xml:space="preserve"><value>Alle ausgeblendeten Skripte wiederhergestellt.</value></data>
+  <data name="StatusAutoStarted" xml:space="preserve"><value>{0} Skript(e) automatisch gestartet.</value></data>
+  <data name="StatusCouldNotOpenDownload" xml:space="preserve"><value>Downloadseite konnte nicht geöffnet werden: {0}</value></data>
+  <data name="StatusCouldNotEnableStartup" xml:space="preserve"><value>Automatischer Start konnte nicht aktiviert werden.</value></data>
+  <data name="StatusCouldNotDisableStartup" xml:space="preserve"><value>Automatischer Start konnte nicht deaktiviert werden.</value></data>
+  <data name="InstallDetecting" xml:space="preserve"><value>AutoHotkey: wird erkannt...</value></data>
+  <data name="InstalledNone" xml:space="preserve"><value>Installiert: keine</value></data>
+  <data name="InstalledList" xml:space="preserve"><value>Installiert: {0}</value></data>
+  <data name="HiddenButtonCount" xml:space="preserve"><value>{0} ausgeblendet</value></data>
+  <data name="EmptyNoScriptsTitle" xml:space="preserve"><value>Keine AutoHotkey-Skripte gefunden</value></data>
+  <data name="EmptyNoScriptsHint" xml:space="preserve"><value>Fügen Sie einen Ordner zur Überwachungsliste hinzu, und scannen Sie erneut.</value></data>
+  <data name="EmptyNoProfileTitle" xml:space="preserve"><value>Keine Skripte in diesem Profil</value></data>
+  <data name="EmptyNoProfileHint" xml:space="preserve"><value>Verwenden Sie die Schaltfläche "Bearbeiten" neben dem Profil, um Skripte zuzuweisen.</value></data>
+  <data name="CardInactive" xml:space="preserve"><value>Inaktiv</value></data>
+  <data name="CardRunning" xml:space="preserve"><value>Wird ausgeführt - PID {0}</value></data>
+  <data name="CardBurst" xml:space="preserve"><value>Kurzlauf aktiv - PID {0}</value></data>
+  <data name="CardScheduled" xml:space="preserve"><value>Geplant aktiv - PID {0}</value></data>
+  <data name="CardNoAhk" xml:space="preserve"><value>AutoHotkey nicht gefunden</value></data>
+  <data name="CardInstallationMissing" xml:space="preserve"><value>AutoHotkey nicht gefunden - installieren Sie v1 oder v2</value></data>
+  <data name="CardStartFailed" xml:space="preserve"><value>Start fehlgeschlagen: {0}</value></data>
+  <data name="CardStopFailed" xml:space="preserve"><value>Beenden fehlgeschlagen: {0}</value></data>
+  <data name="CardLocationFailed" xml:space="preserve"><value>Dateispeicherort konnte nicht geöffnet werden.</value></data>
+  <data name="CardAutoStop" xml:space="preserve"><value>Automatisches Beenden in {0}</value></data>
+  <data name="HotkeyNone" xml:space="preserve"><value>Kein globales Tastenkürzel.</value></data>
+  <data name="HotkeyInvalid" xml:space="preserve"><value>Ungültiges Tastenkürzel. Verwenden Sie z. B. Strg+Alt+G.</value></data>
+  <data name="HotkeyBound" xml:space="preserve"><value>Gebunden an {0}</value></data>
+  <data name="HotkeyError" xml:space="preserve"><value>Tastenkürzel-Fehler: {0}</value></data>
+  <data name="EditorReady" xml:space="preserve"><value>Bereit.</value></data>
+  <data name="EditorSavedAt" xml:space="preserve"><value>Gespeichert um {0}.</value></data>
+  <data name="EditorSaveFailed" xml:space="preserve"><value>Speichern fehlgeschlagen: {0}</value></data>
+  <data name="EditorHotReloadedAt" xml:space="preserve"><value>Neu geladen um {0}.</value></data>
+  <data name="EditorHotReloadFailed" xml:space="preserve"><value>Neu laden fehlgeschlagen: {0}</value></data>
+  <data name="EditorCouldNotRead" xml:space="preserve"><value>Datei konnte nicht gelesen werden: {0}</value></data>
+  <data name="ProfileEditorScriptsAvailable" xml:space="preserve"><value>{0} Skripte verfügbar.</value></data>
+  <data name="ProfileEditorSaved" xml:space="preserve"><value>Gespeichert.</value></data>
+  <data name="DialogAddWatchFolderTitle" xml:space="preserve"><value>Überwachungsordner hinzufügen</value></data>
+  <data name="DialogAddWatchFolderMessage" xml:space="preserve"><value>Möchten Sie vor dem Scannen einen neuen Überwachungsordner hinzufügen?</value></data>
+  <data name="DialogNewProfileTitle" xml:space="preserve"><value>Neues Profil</value></data>
+  <data name="DialogNewProfileMessage" xml:space="preserve"><value>Benennen Sie das neue Umgebungsprofil:</value></data>
+  <data name="DialogNewProfilePlaceholder" xml:space="preserve"><value>Gaming</value></data>
+  <data name="DialogDeleteProfileTitle" xml:space="preserve"><value>Profil löschen</value></data>
+  <data name="DialogDeleteProfileMessage" xml:space="preserve"><value>Profil "{0}" löschen? Die Skripte bleiben erhalten, verlassen aber die Gruppe.</value></data>
+  <data name="DialogKeepRunningTitle" xml:space="preserve"><value>DotAHK weiter ausführen?</value></data>
+  <data name="DialogKeepRunningMessage" xml:space="preserve"><value>Möchten Sie DotAHK im Hintergrund weiter ausführen? Wählen Sie Ja, um in den Infobereich zu minimieren, oder Nein, um zu beenden und alle laufenden Skripte zu stoppen.</value></data>
+  <data name="DialogYes" xml:space="preserve"><value>Ja</value></data>
+  <data name="DialogNo" xml:space="preserve"><value>Nein</value></data>
+  <data name="DialogCancel" xml:space="preserve"><value>Abbrechen</value></data>
+  <data name="DialogDelete" xml:space="preserve"><value>Löschen</value></data>
+</root>

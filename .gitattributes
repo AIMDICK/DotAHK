@@ -1,0 +1,45 @@
+# ===========================================================================
+# DotAHK — .gitattributes
+# Normalizes text handling and line endings across contributors/platforms.
+# ===========================================================================
+
+# Detect text files automatically and normalize line endings in the repo.
+* text=auto
+
+# C# and XAML (primary project sources)
+*.cs text eol=crlf
+*.xaml text eol=crlf
+
+# MSBuild / Visual Studio project and solution files
+*.sln text eol=crlf
+*.csproj text eol=crlf
+*.props text eol=crlf
+*.targets text eol=crlf
+*.pubxml text eol=crlf
+
+# Windows application / packaging manifests
+*.manifest text eol=crlf
+*.appxmanifest text eol=crlf
+
+# Localization catalogs (XML-based .resw)
+*.resw text eol=crlf
+
+# PowerShell helper scripts
+*.ps1 text eol=crlf
+
+# Documentation and configuration
+*.md text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Binary assets — never normalize or diff as text
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.dll binary
+*.exe binary
+*.pri binary
+*.pdb binary

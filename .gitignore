@@ -1,0 +1,75 @@
+# ===========================================================================
+# DotAHK — .gitignore
+# .NET 8 / WinUI 3 / Windows desktop application
+# ===========================================================================
+
+## Build output -------------------------------------------------------------
+[Bb]in/
+[Oo]bj/
+artifacts/
+
+## Build logs ---------------------------------------------------------------
+[Ll]og/
+[Ll]ogs/
+*.log
+*.binlog
+
+## Visual Studio / IDE ------------------------------------------------------
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+
+## Visual Studio Code -------------------------------------------------------
+# Keep shareable workspace configuration; ignore only local/machine state.
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+## Test / coverage output ---------------------------------------------------
+[Tt]est[Rr]esult*/
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+## NuGet --------------------------------------------------------------------
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+project.lock.json
+
+## MSIX / packaging output --------------------------------------------------
+# NOTE: Properties/PublishProfiles/*.pubxml are committed source and are
+# intentionally NOT ignored (the build selects them by platform).
+AppPackages/
+BundleArtifacts/
+*.msix
+*.msixupload
+*.appx
+*.appxbundle
+*.appxupload
+publish/
+PublishScripts/
+
+## DotAHK local application data -------------------------------------------
+# Written at runtime under %LOCALAPPDATA%\DotAHK (user settings + diagnostics).
+settings.json
+startup.log
+
+## Operating system artifacts -----------------------------------------------
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+## Other tooling ------------------------------------------------------------
+_ReSharper*/
+*.dotCover
+.idea/
+Generated Files/
+*_wpftmp.csproj
