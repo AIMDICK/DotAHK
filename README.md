@@ -72,7 +72,7 @@ On first launch DOTAHK detects the operating-system display language and maps it
 ## Installation & Build
 
 ```cmd
-git clone https://github.com/AIMDICK/DotAHK.git
+git clone https://github.com/AIMDYCK/DotAHK.git
 cd DotAHK
 ```
 
@@ -189,7 +189,7 @@ Third-party dependencies (for example the Windows App SDK and CommunityToolkit.M
 
 ## Credits & Development
 
-Developed by [Aimdick](https://github.com/AIMDICK/).
+Developed by [Aimdyck](https://github.com/AIMDYCK/).
 
 This project was built and iterated using an AI-assisted development workflow:
 
