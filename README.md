@@ -71,10 +71,8 @@ On first launch DOTAHK detects the operating-system display language and maps it
 
 ## Installation & Build
 
-The GitHub repository URL is not yet known; replace the placeholder below with the real URL once the repository is published.
-
 ```cmd
-git clone <REPOSITORY_URL>
+git clone https://github.com/AIMDICK/DotAHK.git
 cd DotAHK
 ```
 
