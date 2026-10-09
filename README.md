@@ -51,7 +51,7 @@ On first launch DOTAHK detects the operating-system display language and maps it
 
 ## Screenshots
 
-![DotAHK main window](DotAHKss.png)
+![DotAHK main window](DotAHKss2.png)
 
 ## Requirements
 
