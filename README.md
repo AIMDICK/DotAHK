@@ -189,7 +189,7 @@ Third-party dependencies (for example the Windows App SDK and CommunityToolkit.M
 
 ## Credits & Development
 
-Developed by [Aimdyck](https://github.com/AIMDICK/).
+Developed by [Aimdick](https://github.com/AIMDICK/).
 
 This project was built and iterated using an AI-assisted development workflow:
 
