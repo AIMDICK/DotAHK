@@ -56,7 +56,7 @@
                     Command="{x:Bind ViewModel.DisableAllCommand}"
                     ToolTipService.ToolTip="{x:Bind ViewModel.Loc.DisableAllTip}">
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <SymbolIcon Symbol="Stop" />
+                        <SymbolIcon Symbol="Cancel" />
                         <TextBlock Text="{x:Bind ViewModel.Loc.DisableAllText}" />
                     </StackPanel>
                 </Button>
@@ -86,6 +86,44 @@
                     <ComboBoxItem Content="Русский" Tag="ru-RU" />
                     <ComboBoxItem Content="Deutsch" Tag="de-DE" />
                 </ComboBox>
+                <!--
+                    Admin elevation. The "Activate Admin" button binds its Visibility
+                    directly (no converter) and is only offered while DotAHK runs
+                    unelevated; the gear flyout persists the auto-elevation preference.
+                -->
+                <Button
+                    Margin="4,0"
+                    Command="{x:Bind ViewModel.ActivateAdminCommand}"
+                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.ElevateAdminTip}"
+                    Visibility="{x:Bind ViewModel.ShowActivateAdminButton, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon FontSize="14" Glyph="&#xE7EF;" />
+                        <TextBlock Text="{x:Bind ViewModel.Loc.ElevateAdminText}" />
+                    </StackPanel>
+                </Button>
+                <Button Margin="4,0" ToolTipService.ToolTip="{x:Bind ViewModel.Loc.AdminSettingsTip}">
+                    <SymbolIcon Symbol="Setting" />
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel Spacing="16">
+                                <ToggleSwitch
+                                    Header="{x:Bind ViewModel.Loc.AlwaysRunAsAdminHeader}"
+                                    IsOn="{x:Bind ViewModel.AlwaysRunAsAdmin, Mode=TwoWay}"
+                                    ToolTipService.ToolTip="{x:Bind ViewModel.Loc.AlwaysRunAsAdminTip}" />
+                                <!--
+                                    Scheduled startup task. It requires elevation to
+                                    register, so the switch is disabled (with an explanatory
+                                    tooltip) while DotAHK runs unelevated.
+                                -->
+                                <ToggleSwitch
+                                    Header="{x:Bind ViewModel.Loc.StartupTaskHeader}"
+                                    IsEnabled="{x:Bind ViewModel.IsAdministrator, Mode=OneWay}"
+                                    IsOn="{x:Bind ViewModel.RunAtWindowsStartup, Mode=TwoWay}"
+                                    ToolTipService.ToolTip="{x:Bind ViewModel.StartupTaskTooltip}" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
             </StackPanel>
         </Grid>
 
@@ -209,6 +247,19 @@
                                             Style="{StaticResource CaptionTextBlockStyle}"
                                             Text="{x:Bind VersionLabel}" />
                                     </Border>
+                                    <!--
+                                        Shown only when the script requests elevation on
+                                        its own while DotAHK is not running as admin: the
+                                        UAC boundary would then make the toggle flip off.
+                                    -->
+                                    <FontIcon
+                                        Margin="5,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="16"
+                                        Foreground="Orange"
+                                        Glyph="&#xE7BA;"
+                                        ToolTipService.ToolTip="{x:Bind Loc.AdminWarningTip}"
+                                        Visibility="{x:Bind ShowAdminWarning, Mode=OneWay}" />
                                 </StackPanel>
                                 <HyperlinkButton
                                     Padding="0"

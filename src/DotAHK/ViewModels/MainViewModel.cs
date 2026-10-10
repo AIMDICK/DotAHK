@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using DotAHK.Models;
 using DotAHK.Services;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
 
 namespace DotAHK.ViewModels;
 
@@ -23,6 +24,8 @@ public partial class MainViewModel : ObservableObject
     private readonly IProfileService _profiles;
     private readonly IGlobalHotkeyService _hotkeys;
     private readonly IAutoStartService _autoStart;
+    private readonly IAdminElevationService _adminElevation;
+    private readonly IStartupTaskService _startupTask;
     private readonly DispatcherQueueTimer _ticker;
 
     /// <summary>Guards against piling up redundant, deferred profile refreshes.</summary>
@@ -100,7 +103,9 @@ public partial class MainViewModel : ObservableObject
         IEditorService editor,
         IProfileService profiles,
         IGlobalHotkeyService hotkeys,
-        IAutoStartService autoStart)
+        IAutoStartService autoStart,
+        IAdminElevationService adminElevation,
+        IStartupTaskService startupTask)
     {
         StartupTrace.Mark("MainViewModel ctor enter");
         _scanner = scanner;
@@ -112,6 +117,8 @@ public partial class MainViewModel : ObservableObject
         _profiles = profiles;
         _hotkeys = hotkeys;
         _autoStart = autoStart;
+        _adminElevation = adminElevation;
+        _startupTask = startupTask;
 
         Editor = new EditorViewModel(editor, tracker, settings);
         ProfileEditor = new ProfileEditorViewModel(profiles);
@@ -235,6 +242,10 @@ public partial class MainViewModel : ObservableObject
         try
         {
             await ScanAsync();
+
+            // Reflect the real Task Scheduler state (read off the UI thread).
+            await RefreshStartupTaskStateAsync();
+
             await LaunchAutoStartScriptsAsync();
         }
         finally
@@ -415,7 +426,8 @@ public partial class MainViewModel : ObservableObject
 
         foreach (var script in scripts)
         {
-            var item = new ScriptItemViewModel(script, _tracker, _fileLocation, _settings, _profiles, _hotkeys);
+            var item = new ScriptItemViewModel(
+                script, _tracker, _fileLocation, _settings, _profiles, _hotkeys, _adminElevation);
             item.EditRequested += OnItemEditRequested;
             item.HideRequested += OnItemHideRequested;
             item.RestoreRequested += OnItemRestoreRequested;
@@ -1018,6 +1030,133 @@ public partial class MainViewModel : ObservableObject
             _settings.Settings.LaunchOnStartup = value;
             _settings.Save();
             OnPropertyChanged();
+        }
+    }
+
+    // ---- Windows Task Scheduler startup ---------------------------------
+
+    private bool _runAtWindowsStartup;
+    private bool _isUpdatingStartupTask;
+
+    /// <summary>
+    /// True when DotAHK is registered in the Windows Task Scheduler to launch at
+    /// sign-in, elevated, with the <c>--minimized</c> switch. The value mirrors the
+    /// real scheduler state: toggling it creates or deletes the task. Requires
+    /// administrator rights; while unelevated the control is disabled in the UI.
+    /// </summary>
+    public bool RunAtWindowsStartup
+    {
+        get => _runAtWindowsStartup;
+        set
+        {
+            if (_runAtWindowsStartup == value)
+            {
+                return;
+            }
+
+            // A programmatic refresh read from the scheduler must never write back.
+            if (_isUpdatingStartupTask)
+            {
+                _runAtWindowsStartup = value;
+                OnPropertyChanged();
+                return;
+            }
+
+            // Creating/deleting an elevated scheduled task needs administrator rights.
+            if (!_adminElevation.IsAdministrator)
+            {
+                StatusMessage = LocalizationService.Get("StatusStartupTaskNeedsAdmin");
+                _runAtWindowsStartup = !value;
+                OnPropertyChanged();
+                return;
+            }
+
+            var succeeded = value ? _startupTask.RegisterStartupTask() : _startupTask.UnregisterStartupTask();
+            if (!succeeded)
+            {
+                StatusMessage = value
+                    ? LocalizationService.Get("StatusCouldNotEnableStartup")
+                    : LocalizationService.Get("StatusCouldNotDisableStartup");
+                _runAtWindowsStartup = !value;
+                OnPropertyChanged();
+                return;
+            }
+
+            _runAtWindowsStartup = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>
+    /// Tooltip for the startup toggle: explains the Administrator requirement while
+    /// the app runs unelevated, and the normal behavior once elevated.
+    /// </summary>
+    public string StartupTaskTooltip => _adminElevation.IsAdministrator
+        ? LocalizationService.Get("StartupTaskToggle.ToolTipService.ToolTip")
+        : LocalizationService.Get("StartupTaskDisabled.ToolTipService.ToolTip");
+
+    /// <summary>
+    /// Reads the real Task Scheduler state on a background thread (the <c>schtasks</c>
+    /// query is expensive) and reflects it in <see cref="RunAtWindowsStartup"/> without
+    /// triggering a register/unregister round-trip.
+    /// </summary>
+    private async Task RefreshStartupTaskStateAsync()
+    {
+        var registered = await Task.Run(() => _startupTask.IsStartupTaskRegistered());
+        RunOnUi(() =>
+        {
+            _isUpdatingStartupTask = true;
+            try
+            {
+                RunAtWindowsStartup = registered;
+            }
+            finally
+            {
+                _isUpdatingStartupTask = false;
+            }
+        });
+    }
+
+    // ---- Admin elevation ------------------------------------------------
+
+    /// <summary>True when the process is already running with administrator rights.</summary>
+    public bool IsAdministrator => _adminElevation.IsAdministrator;
+
+    /// <summary>
+    /// Visibility for the "Activate Admin" button: visible only while the app is not
+    /// elevated. Returned as <see cref="Visibility"/> so the XAML binds directly with
+    /// no value converter (a missing/misregistered converter silently hides the button).
+    /// </summary>
+    public Visibility ShowActivateAdminButton =>
+        _adminElevation.IsAdministrator ? Visibility.Collapsed : Visibility.Visible;
+
+    /// <summary>
+    /// Persisted preference: relaunch DotAHK elevated on the next start. Toggled
+    /// from the gear flyout in the header.
+    /// </summary>
+    public bool AlwaysRunAsAdmin
+    {
+        get => _settings.Settings.AlwaysRunAsAdmin;
+        set
+        {
+            if (_settings.Settings.AlwaysRunAsAdmin == value)
+            {
+                return;
+            }
+
+            _settings.Settings.AlwaysRunAsAdmin = value;
+            _settings.Save();
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>Relaunches DotAHK elevated (UAC) and closes this instance.</summary>
+    [RelayCommand]
+    private void ActivateAdmin()
+    {
+        if (!_adminElevation.RestartAsAdmin())
+        {
+            StatusMessage = LocalizationService.Get("StatusElevationCancelled");
         }
     }
 

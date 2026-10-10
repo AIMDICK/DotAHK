@@ -83,6 +83,30 @@ public partial class App : Application
         StartMinimized = Environment.GetCommandLineArgs()
             .Any(a => string.Equals(a, "--minimized", StringComparison.OrdinalIgnoreCase));
 
+        // --- Self-elevation -------------------------------------------------------
+        // Scripts that need administrator are handled by elevating the whole app, so a
+        // single elevated tracker can watch every child. When the user opted in,
+        // relaunch elevated before any window or service graph is created and never
+        // build this unelevated UI.
+        try
+        {
+            var elevation = new AdminElevationService();
+            if (!elevation.IsAdministrator && new SettingsService().Settings.AlwaysRunAsAdmin)
+            {
+                StartupTrace.Mark("auto-elevation requested");
+                if (elevation.RestartAsAdmin())
+                {
+                    return;
+                }
+
+                StartupTrace.Mark("auto-elevation declined; continuing unelevated");
+            }
+        }
+        catch (Exception ex)
+        {
+            StartupTrace.Mark("auto-elevation check failed: " + ex.GetType().Name);
+        }
+
         // --- Strict single instance -----------------------------------------------
         // Enforce one running process so the ProcessTracker and the settings file are
         // never owned by two instances at once. A duplicate redirects its activation to
@@ -127,19 +151,25 @@ public partial class App : Application
 
         Window = new MainWindow();
         StartupTrace.Mark("MainWindow constructed");
-        Window.Activate();
-        StartupTrace.Mark("Window.Activate returned (first paint queued)");
+
+        if (StartMinimized && Window is MainWindow hiddenWindow)
+        {
+            // Daemon/auto-start launch: strictly never call Activate() so the frame is
+            // never presented. The window hides its native handle before the UI thread
+            // can render the visual tree and brings up the shell + tray icon itself.
+            hiddenWindow.PrepareHiddenStartup();
+        }
+        else
+        {
+            Window.Activate();
+            StartupTrace.Mark("Window.Activate returned (first paint queued)");
+        }
 
         // Start the (idempotent) background service initialization right away so the
         // window can paint immediately and the daemon path still initializes even
         // when the window is hidden straight into the notification area.
         _ = AppServices.EnsureInitializedAsync();
         StartupTrace.Mark("background init kicked off");
-
-        if (StartMinimized && Window is MainWindow mainWindow)
-        {
-            mainWindow.MinimizeToTray();
-        }
     }
 
     /// <summary>

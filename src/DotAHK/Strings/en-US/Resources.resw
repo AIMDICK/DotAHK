@@ -107,6 +107,17 @@
   <data name="GroupToggle.ToolTipService.ToolTip" xml:space="preserve"><value>Toggle membership in this group. A script can belong to several groups.</value></data>
   <data name="LaunchOnStartupCheck.Content" xml:space="preserve"><value>Launch on startup</value></data>
   <data name="LaunchOnStartupCheck.ToolTipService.ToolTip" xml:space="preserve"><value>Run this script automatically when DotAHK boots</value></data>
+  <data name="ElevateAdminButton.Text" xml:space="preserve"><value>Activate Admin</value></data>
+  <data name="ElevateAdminButton.ToolTipService.ToolTip" xml:space="preserve"><value>Restart DotAHK with administrator rights so it can manage scripts that require elevation</value></data>
+  <data name="AdminSettingsButton.ToolTipService.ToolTip" xml:space="preserve"><value>Elevation settings</value></data>
+  <data name="AlwaysRunAsAdminToggle.Header" xml:space="preserve"><value>Always run as administrator</value></data>
+  <data name="AlwaysRunAsAdminToggle.ToolTipService.ToolTip" xml:space="preserve"><value>Automatically request elevation (UAC) every time DotAHK starts</value></data>
+  <data name="StartupTaskToggle.Header" xml:space="preserve"><value>Run at Windows startup</value></data>
+  <data name="StartupTaskToggle.ToolTipService.ToolTip" xml:space="preserve"><value>Launch DotAHK automatically at Windows sign-in, as Administrator, minimized to the notification area</value></data>
+  <data name="StartupTaskDisabled.ToolTipService.ToolTip" xml:space="preserve"><value>DotAHK must be running as Administrator to configure startup. Use "Activate Admin" to elevate.</value></data>
+  <data name="StatusStartupTaskNeedsAdmin" xml:space="preserve"><value>Enable Admin mode before configuring startup.</value></data>
+  <data name="StatusElevationCancelled" xml:space="preserve"><value>Elevation was cancelled.</value></data>
+  <data name="AdminWarningIcon.ToolTipService.ToolTip" xml:space="preserve"><value>This script requests Administrator privileges. If started while DotAHK is not in Admin mode, the toggle will incorrectly turn off due to Windows security.</value></data>
   <data name="DownloadV1Text.Text" xml:space="preserve"><value>Download v1</value></data>
   <data name="DownloadV1Button.ToolTipService.ToolTip" xml:space="preserve"><value>AutoHotkey v1 is not installed</value></data>
   <data name="DownloadV2Text.Text" xml:space="preserve"><value>Download v2</value></data>

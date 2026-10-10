@@ -32,11 +32,51 @@ public sealed partial class MainWindow : Window
     }
 
     /// <summary>
+    /// Prepares a <c>--minimized</c> (daemon/auto-start) launch so the window is never
+    /// painted on screen. The native HWND is hidden as early as possible - before the
+    /// UI thread has a chance to render the visual tree - and the shell (tray icon,
+    /// close interception and navigation) is brought up eagerly because the
+    /// <see cref="Window.Activated"/> event never fires for a window that stays hidden.
+    /// </summary>
+    public void PrepareHiddenStartup()
+    {
+        // Grab the AppWindow from this window's native handle and hide the window at the
+        // Win32 level immediately. ShowWindow(SW_HIDE) prevents the framework from
+        // presenting the default frame before it is parked in the notification area.
+        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        ShowWindow(hwnd, SwHide);
+
+        // Belt-and-braces: also hide through the AppWindow abstraction so the presenter
+        // state matches the native visibility.
+        AppWindow.Hide();
+
+        // The window must remain parked; remember that so the shell setup below keeps it
+        // hidden even if the tray icon is created slightly later.
+        _pendingMinimizeToTray = true;
+
+        // Activated never fires while the window stays hidden, so initialize the shell
+        // (tray icon, close handler, loading page) directly instead of waiting for it.
+        InitializeShell();
+
+        StartupTrace.Mark("minimized start: window hidden before first render");
+    }
+
+    /// <summary>
     /// Runs once, the first time the window becomes active (i.e. it is on screen).
     /// Doing the shell setup here keeps the fast construction path free of work so the
     /// window paints immediately.
     /// </summary>
     private void OnWindowActivated(object sender, WindowActivatedEventArgs args)
+    {
+        InitializeShell();
+    }
+
+    /// <summary>
+    /// One-time shell configuration: title bar, icon, tray icon, close interception and
+    /// the loading page navigation. Safe to call from either the activation path or the
+    /// hidden start-up path; it is idempotent.
+    /// </summary>
+    private void InitializeShell()
     {
         if (_shellInitialized)
         {
@@ -66,8 +106,9 @@ public sealed partial class MainWindow : Window
             MinimizeToTray();
         }
 
-        // Now that the window is on screen, bring up the loading page which awaits the
-        // background service initialization and routes to onboarding or the dashboard.
+        // Bring up the loading page which awaits the background service initialization
+        // and routes to onboarding or the dashboard. This runs even while the window is
+        // hidden so the app is fully functional in the notification area.
         RootFrame.Navigate(typeof(LoadingPage));
         StartupTrace.Mark("shell ready: LoadingPage navigated");
     }
@@ -119,6 +160,7 @@ public sealed partial class MainWindow : Window
     }
 
     private const int SwRestore = 9;
+    private const int SwHide = 0;
 
     [DllImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]

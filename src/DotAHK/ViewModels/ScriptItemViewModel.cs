@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DotAHK.Models;
 using DotAHK.Services;
+using Microsoft.UI.Xaml;
 
 namespace DotAHK.ViewModels;
 
@@ -17,6 +18,7 @@ public partial class ScriptItemViewModel : ObservableObject
     private readonly ISettingsService _settings;
     private readonly IProfileService _profiles;
     private readonly IGlobalHotkeyService _hotkeys;
+    private readonly IAdminElevationService _adminElevation;
     private bool _suppressToggleHandling;
     private RunMode _activeMode = RunMode.Persistent;
 
@@ -26,7 +28,8 @@ public partial class ScriptItemViewModel : ObservableObject
         IFileLocationService fileLocation,
         ISettingsService settings,
         IProfileService profiles,
-        IGlobalHotkeyService hotkeys)
+        IGlobalHotkeyService hotkeys,
+        IAdminElevationService adminElevation)
     {
         Script = script;
         _tracker = tracker;
@@ -34,6 +37,7 @@ public partial class ScriptItemViewModel : ObservableObject
         _settings = settings;
         _profiles = profiles;
         _hotkeys = hotkeys;
+        _adminElevation = adminElevation;
 
         // Seed the argument box from persisted settings without triggering a save.
         _arguments = settings.Settings.ScriptArguments.TryGetValue(script.Key, out var stored)
@@ -85,6 +89,21 @@ public partial class ScriptItemViewModel : ObservableObject
         : $"AutoHotkey {Script.Installation.DisplayVersion ?? Script.Installation.Version.ToString()}";
 
     public bool CanRun => Script.Installation is not null;
+
+    /// <summary>True when the script source appears to request UAC elevation itself.</summary>
+    public bool RequiresAdmin => Script.RequiresAdmin;
+
+    /// <summary>
+    /// Warning-icon visibility: shown only when the script requests elevation while
+    /// DotAHK itself is NOT running elevated. In that case Windows' UAC boundary hides
+    /// the elevated child from the tracking handle, so the active toggle would falsely
+    /// flip back to off. Returned as <see cref="Visibility"/> for direct XAML binding,
+    /// with no value converter.
+    /// </summary>
+    public Visibility ShowAdminWarning =>
+        RequiresAdmin && !_adminElevation.IsAdministrator
+            ? Visibility.Visible
+            : Visibility.Collapsed;
 
     [ObservableProperty]
     private bool _isActive;

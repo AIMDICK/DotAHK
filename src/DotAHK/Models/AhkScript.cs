@@ -28,6 +28,13 @@ public sealed class AhkScript
     /// <summary>Version detected by inspecting the script's <c>#Requires</c> directive.</summary>
     public AhkVersion DetectedVersion { get; set; } = AhkVersion.Unknown;
 
+    /// <summary>
+    /// True when the script source contains a common AutoHotkey elevation pattern
+    /// (for example <c>A_IsAdmin</c> or the <c>*RunAs</c> verb), meaning the script
+    /// may request UAC elevation at run time. Detected during scanning.
+    /// </summary>
+    public bool RequiresAdmin { get; set; }
+
     /// <summary>Installation resolved to launch this script (null when none could be resolved).</summary>
     public AhkInstallation? Installation { get; set; }
 

@@ -36,6 +36,7 @@ public sealed class LocalizedStrings
 
     public string OpenLocationTip => LocalizationService.Get("OpenLocationButton.ToolTipService.ToolTip");
     public string HighCpuText => LocalizationService.Get("HighCpuText.Text");
+    public string AdminWarningTip => LocalizationService.Get("AdminWarningIcon.ToolTipService.ToolTip");
 
     public string BurstText => LocalizationService.Get("BurstText.Text");
     public string BurstTip => LocalizationService.Get("BurstButton.ToolTipService.ToolTip");
@@ -65,6 +66,15 @@ public sealed class LocalizedStrings
     public string GroupToggleTip => LocalizationService.Get("GroupToggle.ToolTipService.ToolTip");
     public string LaunchOnStartup => LocalizationService.Get("LaunchOnStartupCheck.Content");
     public string LaunchOnStartupTip => LocalizationService.Get("LaunchOnStartupCheck.ToolTipService.ToolTip");
+    public string ElevateAdminText => LocalizationService.Get("ElevateAdminButton.Text");
+    public string ElevateAdminTip => LocalizationService.Get("ElevateAdminButton.ToolTipService.ToolTip");
+    public string AdminSettingsTip => LocalizationService.Get("AdminSettingsButton.ToolTipService.ToolTip");
+    public string AlwaysRunAsAdminHeader => LocalizationService.Get("AlwaysRunAsAdminToggle.Header");
+    public string AlwaysRunAsAdminTip => LocalizationService.Get("AlwaysRunAsAdminToggle.ToolTipService.ToolTip");
+
+    public string StartupTaskHeader => LocalizationService.Get("StartupTaskToggle.Header");
+    public string StartupTaskTip => LocalizationService.Get("StartupTaskToggle.ToolTipService.ToolTip");
+    public string StartupTaskDisabledTip => LocalizationService.Get("StartupTaskDisabled.ToolTipService.ToolTip");
 
     public string DownloadV1Text => LocalizationService.Get("DownloadV1Text.Text");
     public string DownloadV1Tip => LocalizationService.Get("DownloadV1Button.ToolTipService.ToolTip");

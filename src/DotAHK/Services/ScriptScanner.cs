@@ -104,6 +104,7 @@ public sealed partial class ScriptScanner : IScriptScanner
         };
 
         script.DetectedVersion = DetectScriptVersion(filePath);
+        script.RequiresAdmin = DetectRequiresAdmin(filePath);
         script.DetectedHotkeys.AddRange(HotkeyParser.ExtractHotkeys(filePath));
 
         var targetVersion = script.DetectedVersion != AhkVersion.Unknown
@@ -147,6 +148,29 @@ public sealed partial class ScriptScanner : IScriptScanner
         }
 
         return AhkVersion.Unknown;
+    }
+
+    /// <summary>
+    /// Returns true when the script source contains a common AutoHotkey elevation
+    /// pattern: <c>A_IsAdmin</c> (used by the "restart as admin" idiom) or the
+    /// <c>*RunAs</c> launch verb. This is a cheap, whole-file heuristic.
+    /// </summary>
+    private static bool DetectRequiresAdmin(string filePath)
+    {
+        try
+        {
+            var text = File.ReadAllText(filePath);
+            return text.Contains("A_IsAdmin", StringComparison.OrdinalIgnoreCase) ||
+                   text.Contains("*RunAs", StringComparison.OrdinalIgnoreCase);
+        }
+        catch (IOException)
+        {
+            return false;
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return false;
+        }
     }
 
     [GeneratedRegex(

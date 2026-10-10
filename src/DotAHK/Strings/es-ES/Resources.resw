@@ -99,6 +99,17 @@
   <data name="GroupToggle.ToolTipService.ToolTip" xml:space="preserve"><value>Alternar la pertenencia a este grupo. Un script puede pertenecer a varios grupos.</value></data>
   <data name="LaunchOnStartupCheck.Content" xml:space="preserve"><value>Iniciar al arrancar</value></data>
   <data name="LaunchOnStartupCheck.ToolTipService.ToolTip" xml:space="preserve"><value>Ejecutar este script automáticamente al iniciar DotAHK</value></data>
+  <data name="ElevateAdminButton.Text" xml:space="preserve"><value>Activar Admin</value></data>
+  <data name="ElevateAdminButton.ToolTipService.ToolTip" xml:space="preserve"><value>Reiniciar DotAHK con permisos de administrador para poder gestionar scripts que requieran elevación</value></data>
+  <data name="AdminSettingsButton.ToolTipService.ToolTip" xml:space="preserve"><value>Configuración de elevación</value></data>
+  <data name="AlwaysRunAsAdminToggle.Header" xml:space="preserve"><value>Ejecutar siempre como administrador</value></data>
+  <data name="AlwaysRunAsAdminToggle.ToolTipService.ToolTip" xml:space="preserve"><value>Solicitar automáticamente la elevación (UAC) cada vez que DotAHK se inicie</value></data>
+  <data name="StartupTaskToggle.Header" xml:space="preserve"><value>Ejecutar al iniciar Windows</value></data>
+  <data name="StartupTaskToggle.ToolTipService.ToolTip" xml:space="preserve"><value>Iniciar DotAHK automáticamente al iniciar sesión en Windows, como Administrador y minimizado en el área de notificación</value></data>
+  <data name="StartupTaskDisabled.ToolTipService.ToolTip" xml:space="preserve"><value>DotAHK debe ejecutarse como Administrador para configurar el inicio automático. Usa "Activar Admin" para elevar los permisos.</value></data>
+  <data name="StatusStartupTaskNeedsAdmin" xml:space="preserve"><value>Activa el modo Admin antes de configurar el inicio automático.</value></data>
+  <data name="StatusElevationCancelled" xml:space="preserve"><value>Se canceló la elevación.</value></data>
+  <data name="AdminWarningIcon.ToolTipService.ToolTip" xml:space="preserve"><value>Este script requiere permisos de Administrador. Si se ejecuta sin activar el modo Admin en DotAHK, el interruptor se apagará incorrectamente debido a la seguridad de Windows.</value></data>
   <data name="DownloadV1Text.Text" xml:space="preserve"><value>Descargar v1</value></data>
   <data name="DownloadV1Button.ToolTipService.ToolTip" xml:space="preserve"><value>AutoHotkey v1 no está instalado</value></data>
   <data name="DownloadV2Text.Text" xml:space="preserve"><value>Descargar v2</value></data>

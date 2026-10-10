@@ -17,6 +17,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
+    <!-- Application version surfaced in the portable release and file properties. -->
+    <Version>1.2.0</Version>
+    <FileVersion>1.2.0.0</FileVersion>
+
     <!--
       Run as a plain, unpackaged Win32 desktop app. This avoids the need for
       MSIX packaging, a signing certificate, or Windows Developer Mode, and lets

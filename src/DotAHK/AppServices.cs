@@ -26,6 +26,8 @@ public static class AppServices
     private static IProfileService? _profiles;
     private static IGlobalHotkeyService? _hotkeys;
     private static IAutoStartService? _autoStart;
+    private static IAdminElevationService? _adminElevation;
+    private static IStartupTaskService? _startupTask;
 
     /// <summary>True once the service graph has been constructed.</summary>
     public static bool IsInitialized { get; private set; }
@@ -65,6 +67,8 @@ public static class AppServices
                 _profiles = new ProfileService(settings);
                 _hotkeys = new GlobalHotkeyService();
                 _autoStart = new AutoStartService();
+                _adminElevation = new AdminElevationService();
+                _startupTask = new StartupTaskService();
 
                 IsInitialized = true;
                 StartupTrace.Mark("service graph build finished");
@@ -96,9 +100,15 @@ public static class AppServices
 
     public static IAutoStartService AutoStart => _autoStart ?? NotInitialized<IAutoStartService>();
 
+    public static IAdminElevationService AdminElevation =>
+        _adminElevation ?? NotInitialized<IAdminElevationService>();
+
+    public static IStartupTaskService StartupTask =>
+        _startupTask ?? NotInitialized<IStartupTaskService>();
+
     public static MainViewModel CreateMainViewModel() =>
         new(Scanner, Installations, Tracker, Settings, Dialogs, FileLocation, Editor,
-            Profiles, Hotkeys, AutoStart);
+            Profiles, Hotkeys, AutoStart, AdminElevation, StartupTask);
 
     public static OnboardingViewModel CreateOnboardingViewModel() =>
         new(Settings);

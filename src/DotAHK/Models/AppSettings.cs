@@ -59,6 +59,13 @@ public sealed class AppSettings
     public bool LaunchOnStartup { get; set; }
 
     /// <summary>
+    /// When true, DotAHK relaunches itself elevated (UAC) at startup and from the
+    /// "Activate Admin" button, so a single elevated tracker can manage scripts that
+    /// require administrator rights.
+    /// </summary>
+    public bool AlwaysRunAsAdmin { get; set; }
+
+    /// <summary>
     /// Persisted UI language (for example "en-US"). Null until the first launch has run
     /// the OS-language detection; the value is remembered so it is not re-evaluated on
     /// every boot and can be overridden by the user's manual selection.

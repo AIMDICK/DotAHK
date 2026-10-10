@@ -10,7 +10,7 @@ folders, launch it with the right interpreter, group scripts into profiles, and
 control each one from a single, clean window.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Release](https://img.shields.io/badge/release-v1.0.0-blue.svg)](../../releases)
+[![Release](https://img.shields.io/badge/release-v1.2.0-blue.svg)](../../releases)
 [![.NET](https://img.shields.io/badge/.NET-8.0-512BD4.svg)](https://dotnet.microsoft.com/download/dotnet/8.0)
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-0078D6.svg)](#-requirements)
 [![Made with WinUI 3](https://img.shields.io/badge/UI-WinUI%203-0078D6.svg)](#-architecture)
@@ -117,6 +117,44 @@ Choose how each script should run — or let a global hotkey toggle it for you.
 | **⏱️ Scheduled** | Runs for a user-defined duration, then stops automatically. | Timed tasks |
 | **🔄 Auto-start** | Launched automatically when DotAHK boots. | Your everyday setup |
 | **⌨️ Global hotkey** | A system-wide shortcut toggles the script on/off. | Instant access anywhere |
+
+---
+
+## 🛡️ Elevation & Silent Background Startup
+
+DotAHK can manage scripts that require administrator rights and start itself
+silently at sign-in — without ever flashing a window on screen.
+
+### 🔐 Admin Auto-Elevation
+- **One elevated tracker** — instead of elevating each script, the whole DotAHK
+  process can relaunch itself through UAC, so a single tracker can watch and stop
+  every child process (no UAC blindness).
+- **Opt-in preference** — the gear menu's **"Always run as administrator"** toggle
+  requests elevation (UAC) on every launch.
+- **Manual elevation** — the **"Activate Admin"** button relaunches DotAHK elevated
+  on demand.
+- **Elevated-script warnings** — scripts that request elevation are flagged in the
+  UI with a warning icon explaining that they must be started while DotAHK is in
+  Admin mode, otherwise the toggle will appear to switch off due to Windows security.
+
+### 🗓️ Windows Task Scheduler Integration
+- **In-app registration** — a toggle in the settings flyout registers DotAHK with
+  the Windows Task Scheduler (task name `DotAHK_Startup`), gated behind
+  administrator rights (the control is disabled with an explanatory tooltip while
+  unelevated).
+- **Elevated sign-in start** — the task runs at logon with run level
+  **HighestAvailable**, launching DotAHK with the `--minimized` flag.
+- **Silent, flash-free background start** — on a `--minimized` launch DotAHK hides
+  its native window before the UI thread renders and boots straight into the
+  notification area, so the window never flashes on screen.
+- **Daemon-safe by design** — the task is created from an **XML definition**
+  (`schtasks /create /xml`) that explicitly disables the Task Scheduler defaults
+  which would otherwise kill a background daemon:
+  - `<DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>`
+  - `<StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>`
+  - `<ExecutionTimeLimit>PT0S</ExecutionTimeLimit>` (no time limit)
+
+  This bypasses the usual ~3-day execution cap and the battery-power restriction.
 
 ---
 
@@ -232,6 +270,8 @@ DotAHK/
 │       │   ├── TempScriptService.cs       # #NoTrayIcon execution copies
 │       │   ├── ProfileService.cs          # Environment profiles (many-to-many)
 │       │   ├── HotkeyParser.cs            # AHK hotkey extraction
+│       │   ├── AdminElevationService.cs   # UAC self-elevation (runas)
+│       │   ├── StartupTaskService.cs      # Task Scheduler startup (XML)
 │       │   └── LocalizationService.cs     # Runtime .resw catalogs
 │       ├── ViewModels/               # MVVM view models
 │       ├── Converters/               # XAML value converters

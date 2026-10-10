@@ -99,6 +99,17 @@
   <data name="GroupToggle.ToolTipService.ToolTip" xml:space="preserve"><value>Переключить членство в этой группе. Скрипт может входить в несколько групп.</value></data>
   <data name="LaunchOnStartupCheck.Content" xml:space="preserve"><value>Запускать при старте</value></data>
   <data name="LaunchOnStartupCheck.ToolTipService.ToolTip" xml:space="preserve"><value>Автоматически запускать этот скрипт при запуске DotAHK</value></data>
+  <data name="ElevateAdminButton.Text" xml:space="preserve"><value>Включить администратора</value></data>
+  <data name="ElevateAdminButton.ToolTipService.ToolTip" xml:space="preserve"><value>Перезапустить DotAHK с правами администратора, чтобы управлять скриптами, требующими повышения прав</value></data>
+  <data name="AdminSettingsButton.ToolTipService.ToolTip" xml:space="preserve"><value>Параметры повышения прав</value></data>
+  <data name="AlwaysRunAsAdminToggle.Header" xml:space="preserve"><value>Всегда запускать от имени администратора</value></data>
+  <data name="AlwaysRunAsAdminToggle.ToolTipService.ToolTip" xml:space="preserve"><value>Автоматически запрашивать повышение прав (UAC) при каждом запуске DotAHK</value></data>
+  <data name="StartupTaskToggle.Header" xml:space="preserve"><value>Запускать при старте Windows</value></data>
+  <data name="StartupTaskToggle.ToolTipService.ToolTip" xml:space="preserve"><value>Автоматически запускать DotAHK при входе в Windows от имени администратора, свёрнутым в область уведомлений</value></data>
+  <data name="StartupTaskDisabled.ToolTipService.ToolTip" xml:space="preserve"><value>Для настройки автозапуска DotAHK должен работать от имени администратора. Нажмите "Включить администратора", чтобы повысить права.</value></data>
+  <data name="StatusStartupTaskNeedsAdmin" xml:space="preserve"><value>Включите режим администратора перед настройкой автозапуска.</value></data>
+  <data name="StatusElevationCancelled" xml:space="preserve"><value>Повышение прав отменено.</value></data>
+  <data name="AdminWarningIcon.ToolTipService.ToolTip" xml:space="preserve"><value>Этот скрипт требует прав администратора. Если запустить его, когда DotAHK не в режиме администратора, переключатель ошибочно выключится из-за политики безопасности Windows.</value></data>
   <data name="DownloadV1Text.Text" xml:space="preserve"><value>Скачать v1</value></data>
   <data name="DownloadV1Button.ToolTipService.ToolTip" xml:space="preserve"><value>AutoHotkey v1 не установлен</value></data>
   <data name="DownloadV2Text.Text" xml:space="preserve"><value>Скачать v2</value></data>
